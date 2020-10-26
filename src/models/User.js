@@ -8,13 +8,16 @@ class User extends Model{
             name:DataTypes.STRING,
             password:DataTypes.STRING,
             email:DataTypes.STRING,
-            isLogged:DataTypes.BOOLEAN
         },{sequelize,hooks:{
             beforeCreate:(user)=>{
                 const salt = bcrypt.genSaltSync();
                 user.password = bcrypt.hashSync(user.password,salt)
             }
         }})
+    }
+    static associate(models) {
+        this.hasMany(models.Address, { foreignKey: 'user_id', as: 'address' });
+      
     }
 }
 module.exports = User;
