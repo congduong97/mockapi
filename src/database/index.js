@@ -5,12 +5,15 @@ const Address = require("../models/Address");
 const Course = require("../models/Course");
 const User = require("../models/User");
 
-const connection = new Sequelize("TrackingVietin","cong","cong1997",{
+const connection = new Sequelize("tracking","root","root",{
     host: 'localhost',
     dialect: 'mssql',
+    operatorsAliases: false,
     dialectOptions: {
-        encrypt: true
+        options: { instanceName: "sqlexpress" },
+        encrypt: false
       }
+    
 });
 User.init(connection);
 Address.init(connection);
@@ -20,6 +23,11 @@ Address.associate(connection.models)
 User.associate(connection.models)
 Course.associate(connection.models);
 
-
-    connection.authenticate().catch(error => console.log(error))
-   
+connection
+.authenticate()
+.then(() => {
+  console.log('Connection has been established successfully.');
+})
+.catch(err => {
+  console.error('Unable to connect to the database:', err);
+});
